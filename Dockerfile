@@ -1,14 +1,16 @@
 FROM debian:10
 
-RUN apt update -y
-RUN apt-get install \
+RUN apt-get clean
+RUN apt update -y 
+RUN apt-get -yq install \
     gcc \
     vim \
     wget \
     xz-utils \
     subversion \
     python3 \
-    python3-setuptools python3-dev python3-matplotlib \
+    python3-setuptools python3-dev \
+    python3-pip \
     libgmp-dev \
     gzip \
     m4 \
@@ -16,9 +18,8 @@ RUN apt-get install \
     bison \
     make \
     git \
-    libssl-dev \
-    -y
-
+    libssl-dev 
+RUN pip3 install Flask \
 RUN wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz && \
     tar Jxvf gmp-6.2.1.tar.xz && \
     cd gmp-6.2.1 && \
