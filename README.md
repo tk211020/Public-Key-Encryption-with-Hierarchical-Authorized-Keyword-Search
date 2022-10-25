@@ -9,4 +9,6 @@ make
 
 #執行
 
+docker-compose up
+
 make exec
