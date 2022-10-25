@@ -3,9 +3,11 @@ import random
 import time
 
 def main():
-    W = '111' #token vector
-    W_p = '111' #token vector2
-    W_c = '111' #ciphertext vector
+    #W = '101' #token vector
+    #W_p = '101' #token vector2
+    #W_c = '110' #ciphertext vector
+    pehaks(W, W_p, W_c)
+def pehaks(W, W_p, W_c):
     ell = len(W) 
     n = len(W) * 2
     group = PairingGroup('SS512')
@@ -18,47 +20,29 @@ def main():
     sk = keyGen(pp)['sk']
     pk = keyGen(pp)['pk']
     endKeyGen = time.time() 
-    #print("pk is", pk)
-    #print("sk is", sk)
-
+    
     startAuthorize = time.time()
     token_w = authorize(pp, sk, W)
     endAuthorize = time.time() 
-    #print("token_w is", token_w)
-
     startDelegate = time.time()
-    #token_w_p = delegate(pp, token_w, W_p)
-    #print("token_w_p is",token_w_p)
+
+    token_w_p = delegate(pp, token_w, W_p)
     endDelegate = time.time() 
 
     startEncrypt = time.time()
     ct_w = encrypt(pp, pk, W_c)
-    #print("ct_w is", ct_w)
     endEncrypt = time.time() 
 
     startTrapdoor = time.time()
     td_w_p = trapdoor(pp, token_w, W_p)
-    #print("td_w_p is", td_w_p)
-    endTrapdoor = time.time() 
-
-    print("W is", W)
-    print("W_p is", W_p)
-    print("W_c is", W_c)
-
-    startTest = time.time()
-    print("Testing ct_w & td_w_p result:",test(pp, ct_w, td_w_p))
-    endTest = time.time() 
-
-    print("-------------------")
-    print("ell:", ell)
-    print("KeyGen Time:", endKeyGen - startKeyGen)
-    print("Authorize Time:", endAuthorize - startAuthorize)
-    print("Delegate Time:", endDelegate - startDelegate)
-    print("Encrypt Time:", endEncrypt - startEncrypt)
-    print("Trapdoor Time:", endTrapdoor - startTrapdoor)
-    print("Test Time:", endTest - startTest) 
     
-
+    endTrapdoor = time.time() 
+    startTest = time.time()
+    endTest = time.time() 
+    result = {'W': W, 'W_p': W_p, 'W_c' : W_c, 'pk': pk, 'sk': sk, 'token_w': token_w, 'token_w_p': token_w_p, 'ct_w': ct_w, 'td_w_p': td_w_p, 'testing': test(pp, ct_w, td_w_p), 'ell': ell,
+                'keygen_time' : endKeyGen - startKeyGen, 'authorize_time' : endAuthorize - startAuthorize, 'delegate_time': endDelegate - startDelegate, 
+                'encrypt_time': endEncrypt - startEncrypt, 'trapdoor_time': endTrapdoor - startTrapdoor, 'test_time' : endTest - startTest}
+    return result
 def keyGen(pp):
     n = pp['n']
     base_BPair = DOBGen(pp, 2*n+3)
@@ -132,8 +116,8 @@ def authorize(pp, sk, W):
     beta_value = []
     gamma_value = []
     token_w ={'W': W, 'alpha':token_w_alpha, 'beta':token_w_beta, 'gamma':token_w_gamma, 'base':sk}
+    
     #token_w ={'W': W, 'alpha':token_w_alpha, 'beta':token_w_beta, 'gamma':token_w_gamma, 'base':sk, 'alpha_value':alpha_value , 'beta_value':beta_value, 'gamma_value':gamma_value}
-
     alpha_value =  transform(pp,token_w['alpha'], sk)
     for i in set_X:
         beta_value.append(transform(pp,token_w['beta'][i], sk))
@@ -142,6 +126,7 @@ def authorize(pp, sk, W):
     #token_w['alpha_value'] = alpha_value
     #token_w['beta_value'] = beta_value
     #token_w['gamma_value'] = gamma_value
+    
     return token_w
     
 def delegate(pp, token_w, W_p):
@@ -183,6 +168,7 @@ def delegate(pp, token_w, W_p):
         alpha_sum_token_w_beta = [a + b for a, b in zip(alpha_sum_token_w_beta,token_w['beta'][i])]
         alpha_sum_token_w_beta = [j % (random.randint(0,N-1)) for j in alpha_sum_token_w_beta]
     for i in set_X_bar:
+        #??
         token_w['gamma'][2*i] = [j * w_p[2*i] for j in token_w['gamma'][2*i]]
         token_w['gamma'][2*i+1] = [j * w_p[2*i+1] for j in token_w['gamma'][2*i+1]]
         alpha_sum_token_w_gamma = [a + b + c for a, b, c in zip(alpha_sum_token_w_gamma, token_w['gamma'][2*i], token_w['gamma'][2*i+1])]
@@ -205,6 +191,7 @@ def delegate(pp, token_w, W_p):
             beta_sum_token_w_beta[i] = [a + b for a, b in zip(beta_sum_token_w_beta[i],token_w['beta'][j])]
             beta_sum_token_w_beta[i] = [k % (random.randint(0,N-1)) for k in beta_sum_token_w_beta[i]]
         for j in set_X_bar:
+            #??
             token_w['gamma'][2*j] = [k * w_p[2*j] for k in token_w['gamma'][2*j]]
             token_w['gamma'][2*j+1] = [k * w_p[2*j+1] for k in token_w['gamma'][2*j+1]]
             beta_sum_token_w_gamma[i] = [a + b + c for a, b, c in zip(beta_sum_token_w_gamma[i], token_w['gamma'][2*j], token_w['gamma'][2*j+1])]
@@ -242,6 +229,7 @@ def delegate(pp, token_w, W_p):
         beta_value.append(transform(pp,token_w_p['beta'][i], base))
     for i in set_Y_p:
         gamma_value.append(transform(pp,token_w_p['gamma'][i], base))
+    
     return token_w_p
 
 def encrypt(pp, pk, W):
@@ -270,12 +258,10 @@ def encrypt(pp, pk, W):
     return ct_w
 
 def trapdoor(pp, token_w, W_p):
-
     N = pp['N']
     ell = pp['ell']
     n = pp['n']
     W = token_w['W']
-
 
     if (check_subset(W_p, W))!=1 :
         print("W_p must be a subset of W!")
@@ -298,13 +284,14 @@ def trapdoor(pp, token_w, W_p):
     for i in set_X:
         sum_token_w_beta = [a + b for a, b in zip(sum_token_w_beta,token_w['beta'][i])]
         sum_token_w_beta = [j % (random.randint(0,N-1)) for j in sum_token_w_beta]
-   
     for i in set_X_bar:
         token_w['gamma'][2*i] = [j * w_p[2*i] for j in token_w['gamma'][2*i]]
         token_w['gamma'][2*i+1] = [j * w_p[2*i+1] for j in token_w['gamma'][2*i+1]]
         sum_token_w_gamma = [a + b + c for a, b, c in zip(sum_token_w_gamma, token_w['gamma'][2*i], token_w['gamma'][2*i+1])]
+        
         sum_token_w_gamma = [j % (random.randint(0,N-1)) for j in sum_token_w_gamma]
     vector =[a + b + c for a, b, c in zip(token_w['alpha'], sum_token_w_beta, sum_token_w_gamma)]
+    #print('td_v:',vector)
     base = token_w['base']
     value =  transform(pp, vector, base)
     td_w_p = {'W_p':W_p, 'td':vector, 'value':value}
@@ -317,6 +304,12 @@ def test(pp, ct_w ,td_w_p):
     td_w_p_value = td_w_p['value']
     td_w_p_vector = td_w_p['td']
     a = dpvs_pair(ct_w1_value, td_w_p_value)
+    print('ct1:')
+    print(ct_w1)
+
+    print('td:')
+    print(td_w_p_vector)
+    
     if vector_pair(pp, ct_w1, td_w_p_vector) == ct_w2 :
         return 1
     else :

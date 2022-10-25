@@ -1,0 +1,94 @@
+<script type="text/javascript">
+  window.MathJax = {
+   jax: ["input/TeX","output/HTML-CSS"],
+   extensions: ["tex2jax.js"],
+   tex2jax: {
+    inlineMath: [['$','$'],['\\(','\\)']]
+   },
+  };
+  </script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript"></script>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% if result != undefined %}
+
+   <tr>
+       <td> $\mathcal{W}$ </td>
+       <td> {{result.W}} </td>
+   </tr>
+   <tr>
+    <td> $\mathcal{W_p}$ </td>
+    <td> {{result.W_p}} </td>
+   </tr>
+   <tr>
+    <td> $\mathcal{W_c}$ </td>
+    <td> {{result.W_c}} </td>
+</tr>
+   <tr>
+       <td> $\ell$ </td>
+       <td> {{result.ell}} </td>
+   </tr>
+   <tr>
+       <td> $n$ </td>
+       <td> {{(result.ell)*2}} </td>
+   </tr>
+   {% endif %}
+  </tbody>
+</table>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% if result != undefined %}
+   <tr>
+       <td> $pk$  </td>
+       <td> {{result.pk}} </td>
+   </tr>
+   <tr>
+    <td> $sk$  </td>
+    <td> {{result.sk}} </td>
+   </tr>
+   <tr>
+    <td> $token_w$  </td>
+    <td> $\alpha$ : {{result.token_w['alpha']}} <br>
+         $\beta$ : {{result.token_w['beta']}} <br>
+         $\gamma$ : {{result.token_w['gamma']}} <br>
+       </td>
+   </tr>
+   <tr>
+    <td> $token_{w'}$  </td>
+    <td> $\alpha$ : {{result.token_w_p['alpha']}} <br>
+         $\beta$ : {{result.token_w_p['beta']}} <br>
+         $\gamma$ : {{result.token_w_p['gamma']}} <br>
+       </td>
+   </tr>
+   <tr>
+    <td> $ct_w$  </td>
+    <td> $ct_{w_1}$ : {{result.ct_w['ct_w1']}} <br>
+         $ct_{w_2}$ : {{result.ct_w['ct_w2']}} <br>
+       </td>
+   </tr>
+   <tr>
+    <td> $td_{w'}$  </td>
+    <td> $td$ : {{result.td_w_p['td']}} </td>
+   </tr>
+   <tr>
+    <td> Test Result  </td>
+    <td> {{result.testing}} </td>
+   </tr>
+   {% endif %}
+  </tbody>
+</table>
+</html>

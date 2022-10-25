@@ -1,0 +1,20 @@
+<script type="text/javascript">
+    window.MathJax = {
+     jax: ["input/TeX","output/HTML-CSS"],
+     extensions: ["tex2jax.js"],
+     tex2jax: {
+      inlineMath: [['$','$'],['\\(','\\)']]
+     },
+    };
+    </script>
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js" type="text/javascript"></script>
+  
+    <img src="/static/images/arch.png" alt="architecture", title="architecture" width="570" height="380" />
+<form action="/run" method="post">
+    <h2>Enter the bit string of $\mathcal{W}$ (Authorized Token) : <input type="text" name="W" /> <br> 
+    Enter the bit string of $\mathcal{W'}$ (Delegated Token) : <input type="text" name="W_p" /> <br>
+    Enter the bit string of $\mathcal{W_c}$ (Ciphtertext) : <input type="text" name="W_c" /> <br> </h2>
+    <p><input type="submit" value="run" /></p>
+</form>
+
+

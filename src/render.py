@@ -1,60 +1,27 @@
-from flask import Flask, render_template
-import PEHAKS.py
+from flask import Flask, request, render_template, redirect, url_for
+import PEHAKS
 
 app = Flask(__name__)
 
 
 @app.route('/')
-@app.route('/hello')
-def hello():
-    return 'Hello World'
+
+@app.route('/pehaks/input')
+def inputPage():
+    return render_template('input.html')
+
+@app.route('/run',methods=['POST'])
+def run():
+    if request.method == 'POST':
+        W = request.form['W']
+        W_p = request.form['W_p']
+        W_c = request.form['W_c']
+        return redirect(url_for('pehaksResult', W=W, W_p=W_p, W_c=W_c))
 
 
-@app.route('/text')
-def text():
-    return '<html><body><h1>Hello World</h1></body></html>'
-
-
-@app.route('/home')
-def home():
-    return render_template('home.html')
-
-
-@app.route('/page/text')
-def pageText():
-    return render_template('page.html', text="Python Flask !")
-
-
-@app.route('/page/app')
-def pageAppInfo():
-    appInfo = {  # dict
-        'id': 5,
-        'name': 'Python - Flask',
-        'version': '1.0.1',
-        'author': 'Enoxs',
-        'remark': 'Python - Web Framework'
-    }
-    return render_template('page.html', appInfo=appInfo)
-
-
-@app.route('/page/data')
-def pageData():
-    data = {  # dict
-        '01': 'Text Text Text',
-        '02': 'Text Text Text',
-        '03': 'Text Text Text',
-        '04': 'Text Text Text',
-        '05': 'Text Text Text'
-    }
-    return render_template('page.html', data=data)
-
-
-@app.route('/static')
-def staticPage():
-    return render_template('static.html')
-
-@app.route('/pehaks')
-def pehaksResult():
-
+@app.route('/pehaks/result/<W>&<W_p>&<W_c>')
+def pehaksResult(W, W_p, W_c):
+    result = PEHAKS.pehaks(W, W_p, W_c)
+    return render_template('pehaks.html', result=result)
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=9999)
+    app.run(host='0.0.0.0', port=9999, debug=True)
