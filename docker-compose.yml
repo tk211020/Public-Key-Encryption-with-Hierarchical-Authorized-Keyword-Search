@@ -3,6 +3,7 @@ version: "3"
 services:
   vm:
     build: .
+    container_name: pehaks
     ports: 
       - "9999:9999"
     volumes:
