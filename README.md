@@ -1,14 +1,27 @@
 # Public Key Encryption with Hierarchical Authorized Keyword Search
 
-
-#環境設定
-
-#將Makefile, Dockerfile, docker-compose.yml放置在同個目錄並執行
-
+### build the container
+```sh
 make
+# also as
+make build
+```
+### start and execute the container
+```sh
+make start
+```
 
-#執行
+### stop the container
+```sh
+make stop
+```
 
-docker-compose up
+### delete the container 
+```sh
+make stop
+```
 
-make exec
+### rebuild the container
+```sh
+make rebuild
+```
